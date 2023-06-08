@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.tutorial.autorizationserver.federated.FederatedIdentityConfigurer;
 import com.tutorial.autorizationserver.federated.UserRepositoryOAuth2UserHandler;
+import com.tutorial.autorizationserver.repository.GoogleUserRepository;
 import com.tutorial.autorizationserver.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,8 @@ public class AuthorizationSecurityConfig {
 
     private final ClientService clientService;
 
+    private final GoogleUserRepository googleUserRepository;
+
     @Bean
     @Order(1)
     public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -81,7 +84,7 @@ public class AuthorizationSecurityConfig {
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
 
         FederatedIdentityConfigurer federatedIdentityConfigurer = new FederatedIdentityConfigurer()
-                .oauth2UserHandler(new UserRepositoryOAuth2UserHandler());
+                .oauth2UserHandler(new UserRepositoryOAuth2UserHandler(googleUserRepository));
         http
                 .authorizeHttpRequests(authorize ->
                         authorize

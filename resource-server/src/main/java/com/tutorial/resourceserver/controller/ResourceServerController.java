@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ResourceServerController {
 
     @GetMapping("/user")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','OIDC_USER')") // OIDC_USER rol de google
     public ResponseEntity<MessageDto> user (Authentication authentication){
         return ResponseEntity.ok(new MessageDto("Hola "+authentication.getName() +" roles "+authentication.getAuthorities().toString()));
     }
